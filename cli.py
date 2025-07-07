@@ -1,7 +1,18 @@
 import click
 import lector_json
 
-@click.group()
+#   Traducir a español el resultado del parametro --help
+class GrupoPersonalizado(click.Group):
+    def get_help(self, ctx):
+        help_text = super().get_help(ctx)
+        help_text = help_text.replace("Usage", "Uso")
+        help_text = help_text.replace("Options", "Opciones")
+        help_text = help_text.replace("Commands", "Comandos")
+        help_text = help_text.replace("Show this message and exit.", "Muestra este mensaje y sale.")
+        return help_text
+
+
+@click.group(cls=GrupoPersonalizado)
 def cli():
     pass
 
@@ -40,6 +51,12 @@ def user(id):
         print(f"Usuario con ID {id} no encontrado")
     else:
         print(f"Usuario con ID {user['id']}: \n Nombre: {user['name']} \n Apellido: {user['lastname']}")
+
+
+@cli.command()
+@click.argument("id", type=int)
+def eliminar(id):
+    pass
 
 
 if __name__ == "__main__":
